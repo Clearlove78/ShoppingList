@@ -53,9 +53,28 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
         tv_go_to_pay.setText("Pay：("+totalCount+")");
     }
 
+    private void checkDelete(Map<String,Integer> map){
+        List<HashMap<String,String>> waitDeleteList=new ArrayList<>();
+        Map<String,Integer> waitDeleteMap =new HashMap<>();
+        for(int i=0;i<goodsList.size();i++){
+            if(map.get(goodsList.get(i).get("id"))==1){
+                waitDeleteList.add(goodsList.get(i));
+                waitDeleteMap.put(goodsList.get(i).get("id"),map.get(goodsList.get(i).get("id")));
+            }
+        }
+        goodsList.removeAll(waitDeleteList);
+        map.remove(waitDeleteMap);
+        priceControl(map);
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void refreshPrice(Map<String, Integer> pitchOnMap) {
         priceControl(pitchOnMap);
+    }
+
+    public MainActivity() {
+        super();
     }
 
     @Override
@@ -69,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
                     Toast.makeText(this,"select product",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(this,"good",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"good choice",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
