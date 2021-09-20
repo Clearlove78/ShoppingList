@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
     private CheckBox cb_check_all;
     private TextView tv_total_price;
     private TextView tv_go_to_pay;
-
+    private TextView tv_delete;
     private CartAdapter adapter;
 
     private double totalPrice = 0.00;
@@ -71,10 +71,6 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
     @Override
     public void refreshPrice(Map<String, Integer> pitchOnMap) {
         priceControl(pitchOnMap);
-    }
-
-    public MainActivity() {
-        super();
     }
 
     @Override
@@ -128,8 +124,10 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
         listView = (ListView) findViewById(R.id.listview);
         cb_check_all = (CheckBox) findViewById(R.id.all_chekbox);
         tv_total_price = (TextView) findViewById(R.id.tv_total_price);
+        tv_delete = (TextView) findViewById(R.id.tv_delete);
         tv_go_to_pay = (TextView) findViewById(R.id.tv_go_to_pay);
         tv_go_to_pay.setOnClickListener(this);
+        tv_delete.setOnClickListener(this);
         cb_check_all.setOnClickListener(this);
 
         adapter=new CartAdapter(this,goodsList);

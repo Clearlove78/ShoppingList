@@ -73,6 +73,16 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#E24146"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="delete"
+            android:textColor="#FAFAFA" />
 
         <TextView
             android:id="@+id/tv_go_to_pay"

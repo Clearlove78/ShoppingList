@@ -37,16 +37,11 @@ public class CartAdapter extends BaseAdapter {
         vh=new ViewHolder();
         if(view==null){
             view= LayoutInflater.from(context).inflate(R.layout.item_shopcart_product,null);
-
             vh.checkBox=(CheckBox)view.findViewById(R.id.check_box);
             vh.icon=(ImageView)view.findViewById(R.id.iv_adapter_list_pic);
             vh.name=(TextView)view.findViewById(R.id.tv_goods_name);
             vh.price=(TextView)view.findViewById(R.id.tv_goods_price);
             vh.type=(TextView)view.findViewById(R.id.tv_type_size);
-            vh.num=(TextView)view.findViewById(R.id.tv_num);
-            vh.reduce=(TextView)view.findViewById(R.id.tv_reduce);
-            vh.add=(TextView)view.findViewById(R.id.tv_add);
-
             view.setTag(vh);
         }else {
             vh=(ViewHolder)view.getTag();
@@ -111,7 +106,7 @@ public class CartAdapter extends BaseAdapter {
     class ViewHolder{
         CheckBox checkBox;
         ImageView icon;
-        TextView name,price,num,type,reduce,add;
+        TextView name,price,type;
     }
 
 }
