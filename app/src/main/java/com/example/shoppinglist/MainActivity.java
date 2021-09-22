@@ -1,8 +1,11 @@
 package com.example.shoppinglist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
     private TextView tv_go_to_pay;
     private TextView tv_delete;
     private CartAdapter adapter;
+    public EditText editText;
 
     private double totalPrice = 0.00;
     private int totalCount = 0;
@@ -35,8 +39,24 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.two);
-
-        initDate();
+        Button btn=(Button) findViewById(R.id.button10);
+        editText=(EditText)findViewById(R.id.edit_text);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String inputText=editText.getText().toString();
+                goodsList=new ArrayList<>();
+                for(int i=0;i<5;i++){
+                    HashMap<String,String> map=new HashMap<>();
+                    map.put("id",(new Random().nextInt(10000)%(10000-2900+2900) + 2900)+"");
+                    map.put("name",inputText);
+                    map.put("price",(new Random().nextInt(100)%(100-29+29) + 29)+"");
+                    map.put("count",("1"));
+                    goodsList.add(map);
+                }
+                initView();
+            }
+        });
     }
 
     private void priceControl(Map<String, Integer> pitchOnMap){
@@ -86,6 +106,13 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
                 }
                 Toast.makeText(this,"good choice",Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.tv_delete:
+                if(totalCount<=0){
+                    Toast.makeText(this,"select delete product",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                checkDelete(adapter.getPitchOnMap());
+                break;
         }
     }
 
@@ -134,20 +161,6 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
         adapter.setRefreshPriceInterface(this);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-    }
-
-    private void initDate(){
-        goodsList=new ArrayList<>();
-        for(int i=0;i<5;i++){
-            HashMap<String,String> map=new HashMap<>();
-            map.put("id",(new Random().nextInt(10000)%(10000-2900+2900) + 2900)+"");
-            map.put("name","Cart "+(i+1)+" product");
-            map.put("price",(new Random().nextInt(100)%(100-29+29) + 29)+"");
-            map.put("count",("1"));
-            goodsList.add(map);
-        }
-
-        initView();
     }
 
 }

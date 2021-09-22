@@ -41,6 +41,7 @@ public class CartAdapter extends BaseAdapter {
             vh.icon=(ImageView)view.findViewById(R.id.iv_adapter_list_pic);
             vh.name=(TextView)view.findViewById(R.id.tv_goods_name);
             vh.price=(TextView)view.findViewById(R.id.tv_goods_price);
+            vh.reduce=(TextView)view.findViewById(R.id.tv_reduce);
             vh.type=(TextView)view.findViewById(R.id.tv_type_size);
             view.setTag(vh);
         }else {
@@ -61,6 +62,20 @@ public class CartAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     final int index=position;
                     if(((CheckBox)view).isChecked())pitchOnMap.put(dataList.get(index).get("id"),1);else pitchOnMap.put(dataList.get(index).get("id"),0);
+                    refreshPriceInterface.refreshPrice(pitchOnMap);
+                }
+            });
+            vh.reduce.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int index=position;
+                    dataList.get(index).put("count",(Integer.valueOf(dataList.get(index).get("count"))-1)+"");
+                    if(Integer.valueOf(dataList.get(index).get("count"))<=0){
+                        String deID=dataList.get(index).get("id");
+                        dataList.remove(index);
+                        pitchOnMap.remove(deID);
+                    }
+                    notifyDataSetChanged();
                     refreshPriceInterface.refreshPrice(pitchOnMap);
                 }
             });
@@ -106,7 +121,7 @@ public class CartAdapter extends BaseAdapter {
     class ViewHolder{
         CheckBox checkBox;
         ImageView icon;
-        TextView name,price,type;
+        TextView name,price,type,reduce;
     }
 
 }

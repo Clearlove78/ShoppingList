@@ -4,6 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <EditText
+        android:id="@+id/edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write here"
+        android:maxLines="2"
+    />
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add Shopping List" />
+
     <LinearLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
@@ -81,7 +94,7 @@
             android:background="#E24146"
             android:clickable="true"
             android:gravity="center"
-            android:text="delete"
+            android:text="Delete"
             android:textColor="#FAFAFA" />
 
         <TextView
