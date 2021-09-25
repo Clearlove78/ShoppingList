@@ -91,6 +91,16 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+            <Button
+                android:id="@+id/email_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:backgroundTint="@color/purple_700"
+                android:gravity="center"
+                android:text="email" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

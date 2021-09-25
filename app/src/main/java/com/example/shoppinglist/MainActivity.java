@@ -1,6 +1,8 @@
 package com.example.shoppinglist;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -11,10 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.DialogFragment;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -22,20 +22,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements CartAdapter.RefreshPriceInterface ,View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements CartAdapter.RefreshPriceInterface ,View.OnClickListener, SendEmail.NoticeDialogListener {
 
     private ListView listView;
     private CheckBox cb_check_all;
     private TextView tv_total_price;
-    private TextView tv_go_to_pay;
-    private TextView tv_delete;
     private CartAdapter adapter;
     public EditText editText1;
     public EditText editText2;
@@ -43,14 +40,17 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
     private double totalPrice = 0.00;
     private int totalCount = 0;
     private List<HashMap<String, String>> goodsList;
+    private final String email = "jxia27@binghamton.edu";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.two);
         Button btn = (Button) findViewById(R.id.button10);
+        Button email_btn = findViewById(R.id.email_btn);
         editText1 = (EditText) findViewById(R.id.edit_text1);
         editText2 = (EditText) findViewById(R.id.edit_text2);
+        Builder dialogBuidler = new Builder(MainActivity.this);
         listView = (ListView) findViewById(R.id.listview);
         goodsList = new ArrayList();
         editText2.setOnKeyListener(new View.OnKeyListener() {
@@ -102,6 +102,14 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
             public void onClick(View view) {
                 String inputText = editText1.getText().toString();
                 String inputPrice = editText2.getText().toString();
+                if (TextUtils.isEmpty(inputText)){
+                    Toast.makeText(MainActivity.this, "Input Name", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(inputPrice)) {
+                    Toast.makeText(MainActivity.this, "Input Price", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 HashMap<String, String> map = new HashMap<>();
                 map.put("id", (new Random().nextInt(10000) % (10000 - 2900 + 2900) + 2900) + "");
                 map.put("name", inputText);
@@ -111,21 +119,14 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
                 initView();
             }
         });
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END, ItemTouchHelper.RIGHT) {
+        email_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                int start_position = viewHolder.getAdapterPosition();
-                int end_position = target.getAdapterPosition();
-                Collections.swap(goodsList, start_position, end_position);
-                adapter.notifyDataSetChanged();
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                checkDelete(adapter.getPitchOnMap());
+            public void onClick(View view) {
+                SendEmail sendToEmailDialogFragment = new SendEmail();
+                sendToEmailDialogFragment.show(getSupportFragmentManager(), "emailConfirm");
             }
         });
+
     }
 
     private void priceControl(Map<String, Integer> pitchOnMap) {
@@ -141,20 +142,6 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
         tv_total_price.setText("$ " + totalPrice);
     }
 
-    private void checkDelete(Map<String, Integer> map) {
-        List<HashMap<String, String>> waitDeleteList = new ArrayList<>();
-        Map<String, Integer> waitDeleteMap = new HashMap<>();
-        for (int i = 0; i < goodsList.size(); i++) {
-            if (map.get(goodsList.get(i).get("id")) == 1) {
-                waitDeleteList.add(goodsList.get(i));
-                waitDeleteMap.put(goodsList.get(i).get("id"), map.get(goodsList.get(i).get("id")));
-            }
-        }
-        goodsList.removeAll(waitDeleteList);
-        map.remove(waitDeleteMap);
-        priceControl(map);
-        adapter.notifyDataSetChanged();
-    }
     private void deleteData(int position){
         ArrayList<HashMap<String, String>> newList=new ArrayList<>();
         goodsList.remove(position);
@@ -218,5 +205,32 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
         adapter.setRefreshPriceInterface(this);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL, email);
+        i.putExtra(Intent.EXTRA_SUBJECT, "goodList");
+        String list_str = "";
+        for (int j = 0; j < goodsList.size(); j++) {
+            list_str += "Name:";
+            list_str += goodsList.get(j).get("name").toString();
+            list_str += "       ";
+            list_str += "Price:";
+            list_str += goodsList.get(j).get("price").toString();
+        }
+        i.putExtra(Intent.EXTRA_TEXT, list_str);
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getApplicationContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+        Toast.makeText(getApplicationContext(), "Confirm", Toast.LENGTH_LONG).show();
+    }
+
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_LONG).show();
     }
 }
