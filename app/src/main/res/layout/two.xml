@@ -5,12 +5,19 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/edit_text"
+        android:id="@+id/edit_text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Write here"
+        android:hint="Name"
         android:maxLines="2"
     />
+    <EditText
+        android:id="@+id/edit_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Price"
+        android:maxLines="2"
+        />
     <Button
         android:id="@+id/button10"
         android:layout_width="wrap_content"
@@ -36,11 +43,9 @@
 
     <ListView
         android:id="@+id/listview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:childIndicator="@null"
-        android:groupIndicator="@null" >
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
     </ListView>
 
     <LinearLayout
@@ -86,27 +91,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_delete"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#E24146"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="Delete"
-            android:textColor="#FAFAFA" />
-
-        <TextView
-            android:id="@+id/tv_go_to_pay"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#E24146"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="pay(0)"
-            android:textColor="#FAFAFA" />
     </LinearLayout>
 
 </LinearLayout>
