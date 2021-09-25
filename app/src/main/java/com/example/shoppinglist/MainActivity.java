@@ -220,12 +220,15 @@ public class MainActivity extends AppCompatActivity implements CartAdapter.Refre
             list_str += "       ";
             list_str += "Price:";
             list_str += goodsList.get(j).get("price").toString();
+            list_str += "       ";
+            list_str += "Count:";
+            list_str += goodsList.get(j).get("count").toString()+"\n";
         }
         i.putExtra(Intent.EXTRA_TEXT, list_str);
         try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
+            startActivity(Intent.createChooser(i, "Send email"));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getApplicationContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "No applications.", Toast.LENGTH_SHORT).show();
         }
         Toast.makeText(getApplicationContext(), "Confirm", Toast.LENGTH_LONG).show();
     }
